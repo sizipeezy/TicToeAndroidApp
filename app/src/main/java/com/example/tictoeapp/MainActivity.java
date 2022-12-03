@@ -2,6 +2,7 @@ package com.example.tictoeapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -46,10 +47,33 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
             buttons[i] = (Button) findViewById(resourceId);
             buttons[i].setOnClickListener(this);
         }
+
+        rountCount = 0;
+        playerOneScoreCount = 0;
+        playerTwoScoreCount = 0;
+        isActive = true;
     }
 
     @Override
     public void onClick(View view) {
-        Log.i("test", "button is clicked");
+        if(!((Button)view).getText().toString().equals("")){
+            return;
+        }
+
+        String buttonId = view.getResources().getResourceEntryName(view.getId());
+        int gameStatePointer = Integer.parseInt(buttonId.substring(buttonId.length() - 1, buttonId.length()));
+
+        if(isActive){
+            ((Button) view).setText("X");
+            ((Button) view).setTextColor(Color.parseColor("#FFC34A"));
+            gameState[gameStatePointer] = 0;
+        }
+        else {
+            ((Button) view).setText("O");
+            ((Button) view).setTextColor(Color.parseColor("#70FFEA"));
+            gameState[gameStatePointer] = 1;
+        }
+
+        rountCount++;
     }
 }
