@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity  implements View.OnClickListener{
 
@@ -75,5 +76,78 @@ public class MainActivity extends AppCompatActivity  implements View.OnClickList
         }
 
         rountCount++;
+
+        if(checkWinner()){
+                if(isActive){
+                    playerOneScoreCount++;
+                    updatePlayerScore();
+                    Toast.makeText(this, "Player one Won!", Toast.LENGTH_SHORT).show();
+                    playerAgain();
+                }
+                else{
+                    playerTwoScoreCount++;
+                    updatePlayerScore();
+                    Toast.makeText(this, "Player two Won!", Toast.LENGTH_SHORT).show();
+                    playerAgain();
+                }
+        }else if(rountCount == 9){
+            playerAgain();
+            Toast.makeText(this, "No Winner!", Toast.LENGTH_SHORT).show();
+        }else{
+            isActive = !isActive;
+        }
+
+        if(playerOneScoreCount > playerTwoScoreCount){
+            playerStatus.setText("Player one is Winning!");
+        }
+        else if(playerTwoScoreCount > playerOneScoreCount){
+            playerStatus.setText("Player two is Winning!");
+        }
+        else{
+            playerStatus.setText("");
+        }
+
+        resetGame.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                playerAgain();
+                playerOneScoreCount = 0;
+                playerTwoScoreCount = 0;
+                playerStatus.setText("");
+                updatePlayerScore();
+            }
+        });
+
+    }
+
+    public boolean checkWinner(){
+        boolean isWinner = false;
+
+        for (int [] winningPoistion : winningPositions){
+            if(gameState[winningPoistion[0]] == gameState[winningPoistion[1]]
+                    && gameState[winningPoistion[1]] == gameState[winningPoistion[2]]
+                         && gameState[winningPoistion[0]] != 2)
+            {
+                    isWinner =true;
+            }
+
+        }
+        return isWinner;
+    }
+
+    public  void updatePlayerScore(){
+        playerOneScore.setText(Integer.toString(playerOneScoreCount));
+        playerTwoScore.setText(Integer.toString(playerTwoScoreCount));
+
+    }
+
+    public  void playerAgain() {
+        rountCount =0 ;
+        isActive = true;
+
+        for (int i = 0; i< buttons.length; i++){
+            gameState[i] = 2;
+            buttons[i].setText("");
+        }
     }
 }
